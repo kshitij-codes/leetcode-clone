@@ -1,10 +1,18 @@
+import { auth } from "@/firebase/firebase";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Logout from "../Buttons/Logout";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
 
 type TopbarProps = {};
 
 const Topbar: React.FC<TopbarProps> = () => {
+  const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalState);
+
   return (
     <nav className="relative flex h-[50px] w-full shrink-0 items-center bg-dark-layer-1 px-5 text-dark-gray-7">
       <div
@@ -25,12 +33,38 @@ const Topbar: React.FC<TopbarProps> = () => {
               Premium
             </a>
           </div>
-
-          <Link href="/auth">
-            <button className="cursor-pointer rounded bg-dark-fill-3 px-2 py-1 ">
-              Sign In
-            </button>
-          </Link>
+          {!user && (
+            <Link
+              href="/auth"
+              onClick={() =>
+                setAuthModalState((prev) => ({
+                  ...prev,
+                  isOpen: true,
+                  type: "login",
+                }))
+              }
+            >
+              <button className="cursor-pointer rounded bg-dark-fill-3 px-2 py-1 ">
+                Sign In
+              </button>
+            </Link>
+          )}
+          {user && (
+            <div className="group relative cursor-pointer">
+              <img
+                src="/avatar.png"
+                alt="user profile"
+                className="h-8 w-8 rounded-full"
+              />
+              <div
+                className="absolute left-2/4 top-10 z-40  mx-auto -translate-x-2/4 scale-0 rounded bg-dark-layer-1 p-2 text-brand-orange shadow-lg transition-all 
+		duration-300 ease-in-out group-hover:scale-100"
+              >
+                <p className="text-sm">{user.email}</p>
+              </div>
+            </div>
+          )}
+          {user && <Logout />}
         </div>
       </div>
     </nav>
