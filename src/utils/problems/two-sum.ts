@@ -1,8 +1,20 @@
 import assert from "assert";
 import { Problem } from "../types/problem";
 
-const starterCodeTwoSum = `function(nums, target){
-    //Write your code here
+const starterCodeTwoSum = `function twosum(nums, target){
+  //Write your code here
+
+  // Below is the correct answer for testing purposes
+  const hashTable = {}
+
+  for(let i=0;i<nums.length;i++) {
+    let neededVal = target - nums[i]
+    if(!(neededVal in hashTable)){
+      hashTable[nums[i]] = i
+    } else {
+      return [hashTable[neededVal], i]
+    }
+  }
 };`;
 
 // checks if the user has correct code

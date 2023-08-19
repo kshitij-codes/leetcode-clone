@@ -9,6 +9,9 @@ import { authModalState } from "@/atoms/authModalAtom";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { BsList } from "react-icons/bs";
 import Timer from "../Timer/Timer";
+import { problems } from "@/utils/problems";
+import { useRouter } from "next/router";
+import { Problem } from "@/utils/types/problem";
 
 type TopbarProps = {
   problemPage?: boolean;
@@ -17,6 +20,30 @@ type TopbarProps = {
 const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
+
+  const router = useRouter();
+
+  const handleProblemChange = (isForward: boolean) => {
+    const { order } = problems[router.query.pid as string] as Problem;
+    const direction = isForward ? 1 : -1;
+    const nextProblemOrder = order + direction;
+    const nextProblemKey = Object.keys(problems).find(
+      (key) => problems[key].order === nextProblemOrder,
+    );
+    if (isForward && !nextProblemKey) {
+      const firstProblemKey = Object.keys(problems).find(
+        (key) => problems[key].order === 1,
+      );
+      router.push(`/problems/${firstProblemKey}`);
+    } else if (!isForward && !nextProblemKey) {
+      const lastProblemKey = Object.keys(problems).find(
+        (key) => problems[key].order === Object.keys(problems).length,
+      );
+      router.push(`/problems/${lastProblemKey}`);
+    } else {
+      router.push(`/problems/${nextProblemKey}`);
+    }
+  };
 
   return (
     <nav className="relative flex h-[50px] w-full shrink-0 items-center justify-between bg-dark-layer-1 px-5 text-dark-gray-7">
@@ -27,7 +54,10 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
 
         {problemPage && (
           <div className="flex flex-1 items-center justify-center gap-4">
-            <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2">
+            <div
+              onClick={() => handleProblemChange(false)}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2"
+            >
               <FiChevronLeft />
             </div>
             <Link
@@ -39,7 +69,10 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
               </div>
               <p>Problem List</p>
             </Link>
-            <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2">
+            <div
+              onClick={() => handleProblemChange(true)}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-dark-fill-3 hover:bg-dark-fill-2"
+            >
               <FiChevronRight />
             </div>
           </div>

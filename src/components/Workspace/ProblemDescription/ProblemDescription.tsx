@@ -24,9 +24,13 @@ import { toast } from "react-toastify";
 
 type ProblemDescriptionProps = {
   problem: Problem;
+  _solved: boolean;
 };
 
-const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
+const ProblemDescription: React.FC<ProblemDescriptionProps> = ({
+  problem,
+  _solved,
+}) => {
   const [user] = useAuthState(auth);
 
   const returnUserAndProblemData = async (transaction: any) => {
@@ -232,7 +236,7 @@ const ProblemDescription: React.FC<ProblemDescriptionProps> = ({ problem }) => {
                 >
                   {currentProblem.difficulty}
                 </div>
-                {solved && (
+                {(solved || _solved) && (
                   <div className="text-green-s ml-4 rounded p-[3px] text-lg text-dark-green-s transition-colors duration-200">
                     <BsCheck2Circle />
                   </div>
