@@ -79,16 +79,6 @@ const Topbar: React.FC<TopbarProps> = ({ problemPage }) => {
         )}
 
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <div>
-            <a
-              href="https://www.buymeacoffee.com/burakorkmezz"
-              target="_blank"
-              rel="noreferrer"
-              className="cursor-pointer rounded bg-dark-fill-3 px-3 py-1.5 text-brand-orange hover:bg-dark-fill-2"
-            >
-              Premium
-            </a>
-          </div>
           {!user && (
             <Link
               href="/auth"

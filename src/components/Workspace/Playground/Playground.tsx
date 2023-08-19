@@ -37,7 +37,7 @@ const Playground: React.FC<PlaygroundProps> = ({
   const [fontSize, setFontSize] = useLocalStorage("lcc-fontSize", "16px");
   const [settings, setSettings] = useState<ISettings>({
     fontSize: fontSize,
-    settingsModalIsOpen: true,
+    settingsModalIsOpen: false,
     dropdownIsOpen: false,
   });
 
